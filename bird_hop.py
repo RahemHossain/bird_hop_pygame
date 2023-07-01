@@ -138,7 +138,6 @@ def mob_movement(mob_list):
             if mob_rect.bottom == 300:
                 screen.blit(cat_surface, mob_rect)
             elif mob_rect.bottom == 299:
-                mob_rect.x -= 1
                 screen.blit(boss_surf, mob_rect)
             else:
                 screen.blit(bee_surface, mob_rect)
