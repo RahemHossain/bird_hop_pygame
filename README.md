@@ -1,4 +1,4 @@
-## How To Run 
+## Pygame Installation
 Have Python installed, and run the command **pip install pygame** on the terminal (MAC) / Command Line.
 
 ## Goal
