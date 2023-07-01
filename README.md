@@ -1,3 +1,6 @@
+## How To Run 
+Have Python installed, and run the command **pip install pygame** on the terminal (MAC) / Command Line.
+
 ## Goal
 
 Avoid enemies and collect coins to get a higher score than your last attempt.
