@@ -1,12 +1,12 @@
 ## Installation
 
-# Executable File Installation
+### Executable File Installation
 1) Download the "Bird Hop Application" Folder.
 2) Extract and Run "Bird Hop Game"
 
-# Pygame Installation
-1 ) Have Python installed
-2 ) Run the command **pip install pygame** on the terminal (MAC) / Command Line.
+### Pygame Installation
+1) Have Python installed
+2) Run the command **pip install pygame** on the terminal (MAC) / Command Line.
 
 
 
