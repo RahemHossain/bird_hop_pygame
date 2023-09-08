@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from sys import exit
 
+# Initializes the program
 pygame.init()
 
 # Program Settings
@@ -79,13 +80,12 @@ boss_index = 0
 boss_surf = pygame.image.load('sprites/boss.png').convert_alpha()
 boss_surf2 = pygame.image.load('sprites/boss2.png').convert_alpha()
 boss_surf3 = pygame.image.load('sprites/boss_stand.png').convert_alpha()
-boss_frames = [boss_surf,boss_surf3, boss_surf2]
+boss_frames = [boss_surf, boss_surf3, boss_surf2]
 boss_spawn = False
 
 boss_surface = boss_frames[boss_index]
 
 mob_rect_list = []
-
 
 # coin
 
@@ -94,8 +94,7 @@ coins = 0
 coin_rect_list = []
 
 
-
-# Functions
+# Animations & Game Settings
 def player_animation():
     global player_index
     global bird_surface
@@ -108,8 +107,6 @@ def player_animation():
         bird_surface = bird_list[int(player_index)]
 
 
-
-
 def display_score():
     current_time = int((pygame.time.get_ticks() / 1000) - start_time + coins)
     score_surf = score_font.render(str(current_time), False, 'Red')
@@ -118,7 +115,9 @@ def display_score():
     screen.blit(score_surf, score_rect)
     return current_time
 
+
 def coin(list):
+    # controls amount of coins in the game
     coin_list = []
     if len(list) == 0:
         coin_rect_list.append(coin_surface.get_rect(center=(900, randint(50, 250))))
@@ -130,8 +129,8 @@ def coin(list):
             return coin_list
 
 
-
 def mob_movement(mob_list):
+    # Changes the spawn, positions of mobs
     if mob_list != []:
         for mob_rect in mob_list:
             mob_rect.x -= 5
@@ -149,6 +148,7 @@ def mob_movement(mob_list):
 
 
 def collisions(player, mobs):
+    # checks the collision between the player and mobs
     if mobs:
         for mob_rect in mobs:
             if player.colliderect(mob_rect):
@@ -157,6 +157,7 @@ def collisions(player, mobs):
 
 
 def cloud_movement(cloud_rect_list):
+    # moves clouds, that dont cause conflict with the player
     if cloud_rect_list != []:
         for cloud_rect in cloud_rect_list:
             cloud_rect.x -= 5
@@ -171,6 +172,7 @@ def cloud_movement(cloud_rect_list):
 
 
 # Custom Events
+# these events will then be put on the timer section, for these to run.
 mob_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(mob_timer, 1500)
 
@@ -198,13 +200,14 @@ pygame.time.set_timer(boss_animation, 100)
 
 while True:
 
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            # removes the application,
             pygame.quit()
             exit()
         if game_active:
-
+            # this keeps running, as long
+            # as the character has not touched any obstacles
 
             show = 1
             if event.type == pygame.KEYDOWN:
@@ -219,7 +222,9 @@ while True:
                         bird_gravity = -20
 
             # CHECKS FOR CUSTOM EVENTS
+            # The in-built clock is what initializes these timers
             if event.type == mob_timer:
+                # mob-spawns
                 mob = randint(0, 2)
                 if mob == 1:
                     mob_rect_list.append(cat_surface.get_rect(midbottom=(randint(900, 1100), 300)))
@@ -234,9 +239,10 @@ while True:
                             mob_rect_list.append(cat_surface.get_rect(midbottom=(randint(900, 1100), 300)))
 
                         else:
-                            mob_rect_list.append(bee_surface.get_rect(midbottom=(randint(900, 1100), randint(100, 250))))
+                            mob_rect_list.append(
+                                bee_surface.get_rect(midbottom=(randint(900, 1100), randint(100, 250))))
 
-
+            # object animations
             if event.type == cat_animation_timer:
                 if cat_index == 0:
                     cat_index = 1
@@ -263,10 +269,9 @@ while True:
                 else:
                     cloud_rect_list.append(cloud_surface.get_rect(midbottom=(randint(800, 1000), 150)))
             if event.type == coin_timer:
-                if randint(0,2) == 1:
+                if randint(0, 2) == 1:
                     coin_rect_list.append(coin_surface.get_rect(center=(900, randint(50, 200))))
             if event.type == hard_timer:
-
                 boss_spawn = True
 
 
@@ -276,6 +281,9 @@ while True:
             screen.fill('Blue')
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    # starts the game if space is clicked
+                    # everything gets reset, so that the gameplay
+                    # is consistent.
                     pygame.mixer.music.set_volume(0.6)
                     pygame.mixer.music.play(-1)
                     game_active = True
@@ -287,12 +295,11 @@ while True:
                     start_time = pygame.time.get_ticks() / 1000
             if event.type == false_game_timer:
 
-                if randint(0,2) == 1:
+                if randint(0, 2) == 1:
                     show = 1
                 else:
                     show = 0
                     continue
-
 
     if game_active == True:
         # displays score and background
@@ -304,19 +311,20 @@ while True:
         pygame.draw.rect(screen, 'Black', text_rect, 1, 14, 14, 14)
         pygame.draw.rect(screen, 'Black', text_rect, 5, 10)
 
+        # changes position & animation
+
         player_animation()
         screen.blit(bird_surface, bird_rect)
 
         coin(coin_rect_list)
         point = collisions(bird_rect, coin_rect_list)
         if point == False:
+            # when a coin is collected, score increases
             pygame.mixer.Sound.play(coin_sound)
             coins += 3
             coin_rect_list = []
 
             # jump boost
-
-
 
         display_score()
 
@@ -324,34 +332,18 @@ while True:
 
         mob_rect_list = mob_movement(mob_rect_list)
 
-
         # players gravity
         bird_gravity += 1
         bird_rect.y += bird_gravity
         if bird_rect.bottom >= 300:
             bird_rect.bottom = 300
 
-
-
-
-
-
-
-
-
         game_active = collisions(bird_rect, mob_rect_list)
-
-
-
-
-
-
 
 
     else:
 
         # Death Screen
-
 
         coins = 0
         screen.fill(('black'))
@@ -366,17 +358,21 @@ while True:
 
             show = 1
         if score == 0:
+            # Puts in the instructions, if there is no recorded score
             screen.blit(instruction, instruction_rec)
         else:
+            # if there is a recorded score, add the score board
             screen.blit(score_post, score_rect)
             if score > previous_score:
                 pygame.mixer.Sound.play(high_score_sound)
                 previous_score = score
 
-
             high_score = high_font.render('HIGH SCORE: ' + str(previous_score), False, ('red'))
             high_score_rec = high_score.get_rect(midtop=(150, 150))
 
             screen.blit(high_score, high_score_rec)
+
+    # after every frame, update the image/frame
+    # and increment the time getting spent (very important to keep consistency of the game)
     pygame.display.update()
     clock.tick(60)
